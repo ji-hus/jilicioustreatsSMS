@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { menuItems } from '@/data/menu-items';
+import { menuItems, categories } from '@/data/menu-items';
 import { 
   Card, 
   CardContent, 
