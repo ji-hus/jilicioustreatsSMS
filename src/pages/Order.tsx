@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { menuItems, categories } from '@/data/menu-items';
@@ -29,13 +30,15 @@ import {
   SelectTrigger,
   SelectValue, 
 } from '@/components/ui/select';
-import { Calendar as CalendarIcon, X, Plus, Minus } from 'lucide-react';
+import { Calendar as CalendarIcon, X, Plus, Minus, Vegan, EggOff, MilkOff } from 'lucide-react';
 import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 // Define form schema
 const orderFormSchema = z.object({
@@ -69,9 +72,19 @@ interface CartItem {
   quantity: number;
 }
 
+// Dietary restrictions for filtering
+const dietaryOptions = [
+  { id: "vegan", label: "Vegan", icon: <Vegan className="mr-1.5" /> },
+  { id: "glutenFree", label: "Gluten Free", icon: <EggOff className="mr-1.5" /> },
+  { id: "dairyFree", label: "Dairy Free", icon: <MilkOff className="mr-1.5" /> },
+  { id: "nutFree", label: "Nut Free", icon: null }
+];
+
 const OrderPage = () => {
   const [searchParams] = useSearchParams();
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
   const { toast } = useToast();
 
   const form = useForm<OrderFormValues>({
@@ -94,6 +107,19 @@ const OrderPage = () => {
       }
     }
   }, [searchParams, cart]);
+
+  // Filter menu items based on selected category and dietary restrictions
+  const filteredMenuItems = menuItems.filter(item => {
+    // Filter by category
+    const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+    
+    // Filter by dietary restrictions if any are selected
+    const matchesDietary = selectedDietary.length === 0 || selectedDietary.every(restriction => 
+      item.dietaryInfo[restriction as keyof typeof item.dietaryInfo]
+    );
+    
+    return matchesCategory && matchesDietary;
+  });
 
   // Calculate cart total
   const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -138,6 +164,11 @@ const OrderPage = () => {
     setCart(cart.map(item => 
       item.id === id ? { ...item, quantity } : item
     ));
+  };
+
+  // Handle dietary filter toggle
+  const handleDietaryToggle = (value: string[]) => {
+    setSelectedDietary(value);
   };
 
   // Handle form submission
@@ -192,33 +223,127 @@ const OrderPage = () => {
               <CardTitle className="font-serif">Select Items</CardTitle>
               <CardDescription>Browse our menu and add items to your order</CardDescription>
             </CardHeader>
-            <CardContent className="max-h-[500px] overflow-y-auto">
-              {categories.map(category => (
-                <div key={category} className="mb-8">
-                  <h3 className="font-serif font-semibold text-lg mb-3">{category}</h3>
-                  <div className="space-y-3">
-                    {menuItems
-                      .filter(item => item.category === category)
-                      .map(item => (
-                        <div key={item.id} className="flex justify-between items-center p-3 rounded-md bg-bakery-cream/20 hover:bg-bakery-cream/40">
-                          <div>
-                            <p className="font-medium">{item.name}</p>
-                            <p className="text-sm text-gray-600">${item.price.toFixed(2)}</p>
+            <CardContent>
+              {/* Category filter */}
+              <div className="mb-6">
+                <h3 className="font-serif font-medium text-base mb-2">Categories</h3>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                    className={selectedCategory === 'all' ? 'bg-bakery-brown hover:bg-bakery-light' : 'border-bakery-brown text-bakery-brown hover:bg-bakery-brown/10'}
+                    size="sm"
+                    onClick={() => setSelectedCategory('all')}
+                  >
+                    All
+                  </Button>
+                  {categories.map(category => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? 'default' : 'outline'}
+                      className={selectedCategory === category ? 'bg-bakery-brown hover:bg-bakery-light' : 'border-bakery-brown text-bakery-brown hover:bg-bakery-brown/10'}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dietary restrictions filter */}
+              <div className="mb-6">
+                <h3 className="font-serif font-medium text-base mb-2">Dietary Preferences</h3>
+                <ToggleGroup 
+                  type="multiple" 
+                  variant="outline" 
+                  className="flex flex-wrap gap-2"
+                  value={selectedDietary} 
+                  onValueChange={handleDietaryToggle}
+                >
+                  {dietaryOptions.map(option => (
+                    <ToggleGroupItem 
+                      key={option.id} 
+                      value={option.id} 
+                      aria-label={option.label}
+                      className="flex items-center border-bakery-brown text-bakery-brown hover:bg-bakery-brown/10 data-[state=on]:bg-bakery-brown data-[state=on]:text-white"
+                    >
+                      {option.icon}
+                      {option.label}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+
+              {/* Menu items */}
+              <div className="max-h-[400px] overflow-y-auto">
+                {filteredMenuItems.length === 0 ? (
+                  <div className="text-center p-8 text-gray-500">
+                    No items match your selected filters.
+                  </div>
+                ) : (
+                  categories
+                    .filter(category => 
+                      selectedCategory === 'all' || category === selectedCategory
+                    )
+                    .map(category => {
+                      const categoryItems = filteredMenuItems.filter(item => item.category === category);
+                      if (categoryItems.length === 0) return null;
+                      
+                      return (
+                        <div key={category} className="mb-8">
+                          <h3 className="font-serif font-semibold text-lg mb-3">{category}</h3>
+                          <div className="space-y-3">
+                            {categoryItems.map(item => (
+                              <div key={item.id} className="flex justify-between items-center p-3 rounded-md bg-bakery-cream/20 hover:bg-bakery-cream/40">
+                                <div>
+                                  <div className="flex items-center">
+                                    <p className="font-medium">{item.name}</p>
+                                    <div className="flex ml-2 gap-1">
+                                      {item.dietaryInfo.vegan && (
+                                        <span title="Vegan"><Vegan size={16} className="text-green-600" /></span>
+                                      )}
+                                      {item.dietaryInfo.glutenFree && (
+                                        <span title="Gluten Free"><EggOff size={16} className="text-yellow-600" /></span>
+                                      )}
+                                      {item.dietaryInfo.dairyFree && (
+                                        <span title="Dairy Free"><MilkOff size={16} className="text-blue-600" /></span>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <p className="text-sm text-gray-600">${item.price.toFixed(2)}</p>
+                                </div>
+                                <Button 
+                                  onClick={() => addToCart(item)}
+                                  variant="outline" 
+                                  size="sm"
+                                  className="border-bakery-brown text-bakery-brown hover:bg-bakery-brown hover:text-white"
+                                >
+                                  Add
+                                </Button>
+                              </div>
+                            ))}
                           </div>
-                          <Button 
-                            onClick={() => addToCart(item)}
-                            variant="outline" 
-                            size="sm"
-                            className="border-bakery-brown text-bakery-brown hover:bg-bakery-brown hover:text-white"
-                          >
-                            Add
-                          </Button>
                         </div>
-                      ))
-                    }
+                      );
+                    })
+                )}
+              </div>
+              
+              {/* Legend for dietary icons */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <h4 className="text-sm font-medium mb-2">Dietary Information:</h4>
+                <div className="flex flex-col gap-1 text-xs text-gray-600">
+                  <div className="flex items-center">
+                    <Vegan size={14} className="text-green-600 mr-1.5" /> Vegan
+                  </div>
+                  <div className="flex items-center">
+                    <EggOff size={14} className="text-yellow-600 mr-1.5" /> Gluten Free
+                  </div>
+                  <div className="flex items-center">
+                    <MilkOff size={14} className="text-blue-600 mr-1.5" /> Dairy Free
                   </div>
                 </div>
-              ))}
+              </div>
             </CardContent>
           </Card>
         </div>
