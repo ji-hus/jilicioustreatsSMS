@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { 
   Card, 
@@ -14,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Phone, Mail, MessageCircle, Home } from 'lucide-react';
+import { Phone, Mail, MessageCircle, Home, Instagram } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
@@ -169,6 +168,21 @@ const ContactPage = () => {
                 <div>
                   <h3 className="font-medium mb-1">Email</h3>
                   <p className="text-gray-600">hello@jilicioustreats.com</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <Instagram className="h-5 w-5 mr-4 text-bakery-gold mt-0.5" />
+                <div>
+                  <h3 className="font-medium mb-1">Instagram</h3>
+                  <a 
+                    href="https://instagram.com/jilicioustreats" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-bakery-brown hover:text-bakery-gold transition-colors"
+                  >
+                    @jilicioustreats
+                  </a>
                 </div>
               </div>
 
