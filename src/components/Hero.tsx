@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -8,12 +7,12 @@ const Hero = () => {
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
         <div className="w-full md:w-1/2 text-center md:text-left mb-10 md:mb-0 md:pr-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-bakery-brown mb-4">
-            From Our Oven <br />
-            <span className="text-bakery-gold">To Your Table</span>
+            Baked with love <br />
+            <span className="text-bakery-gold">Shared with joy</span>
           </h1>
           
           <p className="text-lg md:text-xl text-gray-700 mb-6 max-w-lg mx-auto md:mx-0">
-            Handcrafted artisanal breads and pastries baked with love in our home kitchen.
+          Thoughtfully crafted breads and sweets, where patience meets flavor.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
@@ -36,12 +35,11 @@ const Hero = () => {
         </div>
         
         <div className="w-full md:w-1/2 relative">
-          <div className="relative w-full h-64 md:h-96 bg-bakery-cream rounded-xl overflow-hidden shadow-xl">
+          <div className="relative w-[200px] h-[200px] md:w-[450px] md:h-[450px] mx-auto bg-bakery-cream rounded-xl overflow-hidden shadow-xl">
             {/* This would be an actual image in a real site */}
             <div className="absolute inset-0 flex items-center justify-center bg-bakery-light/30">
               <div className="text-center">
-                <p className="text-bakery-brown font-serif font-semibold text-lg">Fresh Baked Daily</p>
-                <div className="h-32 w-32 mx-auto mt-3">
+                <div className="h-128 w-128 md:h-[384px] md:w-[384px] mx-auto">
                   <img 
                     src="/lovable-uploads/0eda8371-7361-4abe-8b6f-877094b410d2.png" 
                     alt="Ji'licious Treats" 

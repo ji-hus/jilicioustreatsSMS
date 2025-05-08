@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Phone, Mail, Home } from 'lucide-react';
 
@@ -47,15 +46,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <Home className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>123 Baking Street, Flourville, BK 98765</span>
+                <span>3118 Hickory Lawn Rd., Rochester Hills, MI 48307</span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>(555) 123-4567</span>
+                <span>248-403-0780</span>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>hello@jilicioustreats.com</span>
+                <span>myjilicioustreats@gmail.com</span>
               </li>
             </ul>
           </div>

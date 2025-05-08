@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,8 +61,9 @@ export default {
 				},
 			},
 			fontFamily: {
+				sans: ['Playfair Display', 'serif'],
 				serif: ['Playfair Display', 'serif'],
-				sans: ['Inter', 'sans-serif'],
+				'cream-cake': ['CreamCake', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -1,26 +1,71 @@
-
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import About from '@/components/About';
-import Testimonials from '@/components/Testimonials';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin, Clock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 const Index = () => {
   return (
     <div>
       <Hero />
       
+      {/* Pickup Spots Call-out */}
+      <section className="py-12 bg-bakery-cream/30">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-serif font-bold text-bakery-brown text-center mb-8">
+            Upcoming Pickup Spots
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Regular Pickup Location */}
+            <Card className="bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <MapPin className="h-6 w-6 text-bakery-gold flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-serif font-semibold text-xl text-bakery-brown mb-2">Regular Pickup Location</h3>
+                    <p className="text-gray-600 mb-4">3118 Hickory Lawn Rd., Rochester Hills, MI 48307</p>
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>Call to Confirm Pickup</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Farmers Market Pop-up */}
+            <Card className="bg-white">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <MapPin className="h-6 w-6 text-bakery-gold flex-shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-serif font-semibold text-xl text-bakery-brown mb-2">None At This Time</h3>
+                    <p className="text-gray-600 mb-4">Not Available</p>
+                    <div className="flex items-center text-gray-600 mb-4">
+                      <Clock className="h-4 w-4 mr-2" />
+                      <span>Pending new location, date, and time</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+      
       {/* About Us Section */}
       <section className="py-16 bg-bakery-beige/30">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-8">
             <div className="lg:w-1/2">
-              <div className="h-64 lg:h-96 bg-bakery-cream/50 flex items-center justify-center">
-                <div className="text-center p-6 italic text-bakery-brown">
-                  Image of our bakery space
-                </div>
+              <div className="h-64 lg:h-96 bg-bakery-cream/50 flex items-center justify-center overflow-hidden rounded-lg">
+                <img 
+                  src="/images/franki-frank-box.png" 
+                  alt="Franki Frank" 
+                  className="object-cover w-full h-full"
+                />
               </div>
             </div>
             <div className="lg:w-1/2 space-y-4">
@@ -79,8 +124,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-      
-      <Testimonials />
       
       {/* Call to Action Section */}
       <section className="py-16 bg-bakery-brown text-white text-center">

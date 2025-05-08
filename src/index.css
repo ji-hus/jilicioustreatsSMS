@@ -1,3 +1,59 @@
+@import url('https://fonts.cdnfonts.com/css/yellow-ginger');
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/PlayfairDisplay-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CreamCake';
+  src: url('/fonts/CreamCakeBold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BakeryRoast';
+  src: url('/fonts/BakeryRoastDemoRegular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LovelyBakery';
+  src: url('/fonts/Lovely Bakery.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'YourFontName';
+  src: url('/fonts/your-font-file.ttf') format('truetype');
+  /* If you have multiple formats, you can add them like this:
+  src: url('/fonts/your-font-file.woff2') format('woff2'),
+       url('/fonts/your-font-file.woff') format('woff'),
+       url('/fonts/your-font-file.ttf') format('truetype');
+  */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'FeelingPassionate';
+  src: url('/fonts/Feeling Passionate Personal Use Only.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'TT Ramillas';
+  src: url('/fonts/TT Ramillas Trial Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { menuItems, categories } from '@/data/menu-items';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +26,47 @@ const MenuPage = () => {
           </div>
         </div>
       </div>
+
+      {/* This Week's Specials */}
+      <section className="bg-bakery-gold/10 py-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-bakery-brown text-center mb-6">
+              This Week's Specials
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="h-24 w-24 bg-bakery-cream/50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-bakery-brown text-5xl">🍪</span>
+                    </div>
+                    <div>
+                      <h3 className="font-serif font-semibold text-xl text-bakery-brown mb-2">Sourdough Chocolate Chip Cookies</h3>
+                      <p className="text-gray-600 mb-2">Crispy on the outside and soft on the inside - all while gut healthy!</p>
+                      <p className="text-bakery-brown font-medium">$5.99 for 3</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="bg-white">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="h-24 w-24 bg-bakery-cream/50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-bakery-brown text-5xl">🍞</span>
+                    </div>
+                    <div>
+                      <h3 className="font-serif font-semibold text-xl text-bakery-brown mb-2">Double Chocolate Espresso Sourdough Loaf</h3>
+                      <p className="text-gray-600 mb-2">A decadent dessert loaf with a rich chocolate flavor and a hint of liquid gold espresso.</p>
+                      <p className="text-bakery-brown font-medium">$4.99</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <div className="container mx-auto px-4 py-12">
         {/* Menu Introduction */}
@@ -70,7 +110,6 @@ const MenuPage = () => {
               <div className="h-48 bg-bakery-cream/20 flex items-center justify-center">
                 <div className="text-center p-4">
                   <p className="font-serif text-xl text-bakery-brown">{item.name}</p>
-                  <p className="text-sm text-bakery-light italic">Freshly Baked</p>
                 </div>
               </div>
               <CardContent className="p-6">
@@ -93,9 +132,19 @@ const MenuPage = () => {
                     <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">Nut Free</Badge>
                   )}
                 </div>
+                <div className="mb-4">
+                  {item.madeToOrder ? (
+                    <p className="text-bakery-brown font-medium">Made to Order</p>
+                  ) : item.stock > 0 ? (
+                    <p className="text-green-600 font-medium">{item.stock} in stock</p>
+                  ) : (
+                    <p className="text-red-600 font-medium">Out of stock</p>
+                  )}
+                </div>
                 <Button
                   asChild
                   className="w-full bg-bakery-brown hover:bg-bakery-light"
+                  disabled={!item.madeToOrder && item.stock === 0}
                 >
                   <Link to={`/order?item=${item.id}`}>Pre-Order</Link>
                 </Button>

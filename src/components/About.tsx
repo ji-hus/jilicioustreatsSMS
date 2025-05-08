@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -27,12 +26,11 @@ const About = () => {
           
           <div className="w-full md:w-1/2 order-1 md:order-2 mb-8 md:mb-0">
             <div className="relative h-64 md:h-96 bg-bakery-cream rounded-xl overflow-hidden shadow-md">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <span className="block text-xl md:text-2xl font-serif text-bakery-brown mb-2">Est. 2025</span>
-                  <span className="block text-lg text-bakery-light">From our oven to your table</span>
-                </div>
-              </div>
+              <img 
+                src="/images/pexels-timo-peischl-632000331-17475208.jpg" 
+                alt="Our Story" 
+                className="object-cover w-full h-full"
+              />
             </div>
           </div>
         </div>

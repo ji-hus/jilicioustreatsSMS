@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { 
   Card, 
   CardContent, 
-  CardFooter, 
   CardHeader, 
   CardTitle, 
   CardDescription 
@@ -13,8 +12,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Phone, Mail, MessageCircle, Home, Instagram } from 'lucide-react';
+import { Phone, Mail, Home, Instagram } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import emailjs from '@emailjs/browser';
+import { contactEmailTemplate } from '@/email-templates';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
@@ -25,11 +26,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const ContactPage = () => {
-  const [isChatActive, setIsChatActive] = useState(false);
-  const [chatMessages, setChatMessages] = useState<{text: string, sender: 'user' | 'bakery'}[]>([
-    { text: "Hello! How can I help you today?", sender: 'bakery' }
-  ]);
-  const [userMessage, setUserMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   
   const form = useForm<FormValues>({
@@ -41,33 +38,51 @@ const ContactPage = () => {
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Contact form submitted:", data);
-    toast({
-      title: "Message sent!",
-      description: "Thank you for reaching out. We'll get back to you soon!",
-    });
-    form.reset();
-  };
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    try {
+      // Prepare email template parameters
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        message: data.message
+      };
 
-  const sendChatMessage = () => {
-    if (!userMessage.trim()) return;
-    
-    // Add user message to chat
-    setChatMessages(prev => [...prev, { text: userMessage, sender: 'user' }]);
-    
-    // Simulate bakery response after a short delay
-    setTimeout(() => {
-      setChatMessages(prev => [
-        ...prev, 
-        { 
-          text: "Thanks for your message! This is a simulated response. In a real implementation, you'd connect this to a chat service.", 
-          sender: 'bakery' 
-        }
-      ]);
-    }, 1000);
-    
-    setUserMessage('');
+      console.log('Sending contact form email with parameters:', templateParams);
+
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        'service_10tkiq3',
+        'template_zm1pn05',
+        templateParams,
+        'jRgg2OkLA0U1pS4WQ'
+      );
+
+      console.log('Contact form email sent successfully:', result);
+
+      toast({
+        title: "Message sent!",
+        description: "Thank you for reaching out. We'll get back to you soon!",
+      });
+      
+      form.reset();
+    } catch (error) {
+      console.error('Error sending contact form:', error);
+      if (error instanceof Error) {
+        console.error('Error details:', {
+          message: error.message,
+          name: error.name,
+          stack: error.stack
+        });
+      }
+      toast({
+        title: "Error",
+        description: "There was a problem sending your message. Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -131,8 +146,9 @@ const ContactPage = () => {
                 <Button 
                   type="submit" 
                   className="w-full bg-bakery-brown hover:bg-bakery-light text-white"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </CardContent>
@@ -150,8 +166,8 @@ const ContactPage = () => {
                 <Home className="h-5 w-5 mr-4 text-bakery-gold mt-0.5" />
                 <div>
                   <h3 className="font-medium mb-1">Address</h3>
-                  <p className="text-gray-600">123 Baking Street</p>
-                  <p className="text-gray-600">Flourville, BK 98765</p>
+                  <p className="text-gray-600">3118 Hickory Lawn Rd.</p>
+                  <p className="text-gray-600">Rochester Hills, MI 48307</p>
                 </div>
               </div>
               
@@ -159,7 +175,7 @@ const ContactPage = () => {
                 <Phone className="h-5 w-5 mr-4 text-bakery-gold mt-0.5" />
                 <div>
                   <h3 className="font-medium mb-1">Phone</h3>
-                  <p className="text-gray-600">(555) 123-4567</p>
+                  <p className="text-gray-600">248-403-0780</p>
                 </div>
               </div>
               
@@ -167,7 +183,7 @@ const ContactPage = () => {
                 <Mail className="h-5 w-5 mr-4 text-bakery-gold mt-0.5" />
                 <div>
                   <h3 className="font-medium mb-1">Email</h3>
-                  <p className="text-gray-600">hello@jilicioustreats.com</p>
+                  <p className="text-gray-600">myjilicioustreats@gmail.com</p>
                 </div>
               </div>
               
@@ -185,67 +201,8 @@ const ContactPage = () => {
                   </a>
                 </div>
               </div>
-
-              <div className="pt-4">
-                <Button 
-                  onClick={() => setIsChatActive(!isChatActive)}
-                  className="w-full flex items-center justify-center gap-2 bg-bakery-brown hover:bg-bakery-light text-white"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {isChatActive ? "Close Chat" : "Start Live Chat"}
-                </Button>
-              </div>
             </CardContent>
           </Card>
-
-          {isChatActive && (
-            <Card>
-              <CardHeader className="bg-bakery-brown text-white rounded-t-lg">
-                <CardTitle className="font-serif text-lg">Live Chat</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="h-64 overflow-y-auto p-4 space-y-4">
-                  {chatMessages.map((msg, index) => (
-                    <div 
-                      key={index}
-                      className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div 
-                        className={`max-w-[75%] rounded-lg p-3 ${
-                          msg.sender === 'user' 
-                            ? 'bg-bakery-brown text-white' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        {msg.text}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter className="p-4 border-t">
-                <div className="flex w-full">
-                  <Input
-                    value={userMessage}
-                    onChange={(e) => setUserMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-grow mr-2"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        sendChatMessage();
-                      }
-                    }}
-                  />
-                  <Button 
-                    onClick={sendChatMessage}
-                    className="bg-bakery-brown hover:bg-bakery-light text-white"
-                  >
-                    Send
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
-          )}
         </div>
       </div>
 
